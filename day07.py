@@ -13,14 +13,14 @@ def load_all():
         bag_color = bag_color.strip()
         m = {}
 
-        for content in list(map(lambda c: c.strip(), contents.split(','))):
+        for content in [c.strip() for c in contents.split(',')]:
             mat = re_contents.match(content)
             if mat:
                 m[mat.group(2)] = int(mat.group(1))
                 
         return Bag(bag_color, m)
 
-    bags = list(map(parse_bag, non_blank_lines('input/day07.txt')))
+    bags = [parse_bag(line) for line in non_blank_lines('input/day07.txt')]
     return { b.color: b for b in bags }
 
 colors_to_bags = load_all()
@@ -40,7 +40,7 @@ def num_sub_bags(bag):
 def part_1():
     return len(list(filter(lambda color: color != 'shiny gold' and contains_shiny_gold(color),
                            colors_to_bags.keys())))
-        
+
 def part_2():
     return num_sub_bags(colors_to_bags['shiny gold'])
 
