@@ -3,12 +3,12 @@ from collections import namedtuple
 
 Pwd = namedtuple('Pwd', 'num1 num2 look_for pwd')
 
-def as_tuple(line):
-    r, c, s = line.split(' ')
-    low, high = r.split('-')
-    return Pwd(int(low), int(high), c.replace(':',''), s)
-
 def all_passwords():
+    def as_tuple(line):
+        r, c, s = line.split(' ')
+        low, high = r.split('-')
+        return Pwd(int(low), int(high), c.replace(':',''), s)
+
     return [as_tuple(line) for line in non_blank_lines('input/day02.txt')]
 
 def part_1():
