@@ -1,15 +1,18 @@
 from aoc import non_blank_lines
 
-def row(s):
-    return int(s[0:7].replace('F', '0').replace('B', '1'), base=2)
+def load_all():
+    def row(s):
+        return int(s[0:7].replace('F', '0').replace('B', '1'), base=2)
 
-def column(s):
-    return int(s[7:].replace('R', '1').replace('L', '0'), base=2)
+    def column(s):
+        return int(s[7:].replace('R', '1').replace('L', '0'), base=2)
 
-def seat_id(s):
-    return (row(s) * 8) + column(s)
+    def seat_id(s):
+        return (row(s) * 8) + column(s)
 
-all_ids = sorted(list(map(seat_id, non_blank_lines("input/day05.txt"))))
+    return sorted([seat_id(line) for line in non_blank_lines("input/day05.txt")])
+
+all_ids = load_all()
 
 def part_2():
     for idx in range(1, len(all_ids) - 1):
