@@ -1,6 +1,9 @@
 def non_blank_lines(the_file):
     with open(the_file, 'r') as f:
         return list(filter(lambda tmp: tmp != '', map(lambda s: s.strip(), f.readlines())))
+
+def non_blank_lines_csv(the_file):
+    return [ line.split(',') for line in non_blank_lines(the_file) ]
     
 def single_int_line(the_file):
     return [int(n) for n in non_blank_lines(the_file)]
