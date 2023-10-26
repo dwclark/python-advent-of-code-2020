@@ -48,10 +48,7 @@ class Ship2(Ship):
     def compass_action(self, move):
         self.directions[Ship.directionsMap[move[0]]] += move[1]
 
-def load():
-    return [ (line[0], int(line[1:])) for line in non_blank_lines('input/day12.txt') ]
-
-my_actions = load()
+my_actions = [ (line[0], int(line[1:])) for line in non_blank_lines('input/day12.txt') ]
 print("Part 1:", Ship({'E': 1}).actions(my_actions).manhattan())
 print("Part 2:", Ship2({'E': 10, 'N': 1}).actions(my_actions).manhattan())
 
