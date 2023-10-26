@@ -13,7 +13,7 @@ class Ferry:
             self.grid = grid
 
     def __deepcopy__(self, memo):
-        return Ferry(deepcopy(self.grid, memo))
+        return type(self)(deepcopy(self.grid, memo))
 
     def __str__(self):
         return '\n'.join([ ''.join(row) for row in self.grid ])
@@ -56,7 +56,7 @@ class Ferry:
                 if not self.is_floor(rc):
                     yield rc
 
-    def next_grid_1(self):
+    def next_grid(self):
         new_ferry = deepcopy(self)
         for seat in self.every_seat():
             occupied = 0
@@ -68,7 +68,9 @@ class Ferry:
                 new_ferry[seat] = 'L'
         return new_ferry
 
-    def next_grid_2(self):
+class Ferry2(Ferry):
+
+    def next_grid(self):
         new_ferry = deepcopy(self)
         for seat in self.every_seat():
             occupied = 0
@@ -91,14 +93,14 @@ class Ferry:
         return new_ferry
                     
 
-def solve(fun):
-    prev = Ferry(non_blank_lines('input/day11.txt'))
-    current = fun(prev)
+def solve(con):
+    prev = con(non_blank_lines('input/day11.txt'))
+    current = prev.next_grid()
     while prev != current:
         prev = current
-        current = fun(prev)
+        current = prev.next_grid()
 
-    return len(list(filter(lambda seat: current.is_occupied(seat), current.every_seat())))
+    return len(list(filter(current.is_occupied, current.every_seat())))
 
-print("Part 1:", solve(lambda ferry: ferry.next_grid_1()))
-print("Part 2:", solve(lambda ferry: ferry.next_grid_2()))
+print("Part 1:", solve(Ferry))
+print("Part 2:", solve(Ferry2))
