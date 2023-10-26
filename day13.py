@@ -1,8 +1,8 @@
-from aoc import non_blank_lines_csv
+from aoc import non_blank_lines
 
-data = non_blank_lines_csv('input/day13.txt')
-earliest = int(data[0][0])
-timestamps = data[1]
+data = non_blank_lines('input/day13.txt')
+earliest = int(data[0])
+timestamps = data[1].split(',')
 
 def wait_time(val, target):
     to_add = 0 if target % val == 0 else 1

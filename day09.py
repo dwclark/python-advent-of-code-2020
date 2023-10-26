@@ -16,8 +16,7 @@ def search_violation(window_size, the_list):
             return current
 
 def search_for_sum(look_for, the_list):
-    for low in range(0, len(the_list)):
-        tot = the_list[low]
+    for low, tot in enumerate(the_list):
         for high in range(low+1, len(the_list)):
             tot += the_list[high]
             if look_for < tot:
