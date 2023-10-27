@@ -8,28 +8,23 @@ class Machine:
     
     def __init__(self):
         self.memory = {}
-        self.mask = {}
+        self.mask = ''
 
     def where_mask_is(self, v):
-        return list(map(lambda item: item[0], filter(lambda tup: tup[1] == v, self.mask.items())))
+        return list(map(lambda tup: tup[0], filter(lambda tup: tup[1] == v, enumerate(self.mask))))
     
     def decode(self, instruction):
         match = Machine.mem_pattern.match(instruction)
         if match:
             self.write_memory(int(match.group(1)), int(match.group(2)))
         else:
-            self.set_mask(Machine.mask_pattern.match(instruction).group(1))
-            
-    def set_mask(self, mask_str):
-        self.mask = {}
-        for idx, s in enumerate(reversed(mask_str)):
-            self.mask[idx] = int(s) if s in ['0','1'] else 2
+            self.mask = ''.join(reversed(Machine.mask_pattern.match(instruction).group(1)))
 
     def write_memory(self, address, val):
-        for loc in self.where_mask_is(0):
+        for loc in self.where_mask_is('0'):
             val = clear_bit(val, loc)
 
-        for loc in self.where_mask_is(1):
+        for loc in self.where_mask_is('1'):
             val = set_bit(val, loc)
 
         self.memory[address] = val
@@ -53,10 +48,10 @@ class Machine2(Machine):
         return addresses
     
     def write_memory(self, address, val):
-        for loc in self.where_mask_is(1):
+        for loc in self.where_mask_is('1'):
             address = set_bit(address, loc)
 
-        for address in Machine2.set_all_bits(self.where_mask_is(2), [address]):
+        for address in Machine2.set_all_bits(self.where_mask_is('X'), [address]):
             self.memory[address] = val
         
 instructions = non_blank_lines('input/day14.txt')
