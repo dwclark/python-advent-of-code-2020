@@ -27,3 +27,8 @@ def blank_line_grouped(the_file):
 def blank_line_delimited(the_file):
     return list(map(lambda g: ' '.join(g), blank_line_grouped(the_file)))
 
+def set_bit(value, bit):
+    return value | (1<<bit)
+
+def clear_bit(value, bit):
+    return value & ~(1<<bit)

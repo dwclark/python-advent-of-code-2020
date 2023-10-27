@@ -1,15 +1,10 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, set_bit, clear_bit
 import re
-
-def set_bit(value, bit):
-    return value | (1<<bit)
-
-def clear_bit(value, bit):
-    return value & ~(1<<bit)
 
 class Machine:
 
     mem_pattern = re.compile(r"mem\[(\d+)] = (\d+)")
+    mask_pattern = re.compile(r"mask = ([X01]{36})")
     
     def __init__(self):
         self.memory = {}
@@ -19,24 +14,17 @@ class Machine:
         return list(map(lambda item: item[0], filter(lambda tup: tup[1] == v, self.mask.items())))
     
     def decode(self, instruction):
-        if instruction[0:3] == 'mem':
-            self.set_memory(instruction)
+        match = Machine.mem_pattern.match(instruction)
+        if match:
+            self.write_memory(int(match.group(1)), int(match.group(2)))
         else:
-            self.set_mask(instruction)
+            self.set_mask(Machine.mask_pattern.match(instruction).group(1))
             
-    def set_mask(self, instruction):
+    def set_mask(self, mask_str):
         self.mask = {}
-        mask_str = instruction.replace('mask = ', '')
         for idx, s in enumerate(reversed(mask_str)):
-            if s in ['0', '1']:
-                self.mask[idx] = int(s)
-            else:
-                self.mask[idx] = 2
+            self.mask[idx] = int(s) if s in ['0','1'] else 2
 
-    def set_memory(self, instruction):
-        m = Machine.mem_pattern.match(instruction)
-        self.write_memory(int(m.group(1)), int(m.group(2)))
-        
     def write_memory(self, address, val):
         for loc in self.where_mask_is(0):
             val = clear_bit(val, loc)
@@ -57,13 +45,11 @@ class Machine2(Machine):
     def set_all_bits(locations, addresses):
         if locations:
             loc = locations[0]
-            rest = locations[1:]
             new_addresses = []
             for address in addresses:
-                new_addresses.append(set_bit(address, loc))
-                new_addresses.append(clear_bit(address, loc))
+                new_addresses.extend([set_bit(address, loc), clear_bit(address, loc)])
                 
-            return Machine2.set_all_bits(rest, new_addresses)
+            return Machine2.set_all_bits(locations[1:], new_addresses)
         return addresses
     
     def write_memory(self, address, val):
