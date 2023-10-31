@@ -12,34 +12,23 @@ def initial_possible(foods):
     table = {}
     for food in foods:
         for allergen in food.allergens:
-            if allergen in table.keys():
-                table[allergen] = table[allergen] & food.ingredients
-            else:
-                table[allergen] = food.ingredients
+            table[allergen] = table[allergen] & food.ingredients if allergen in table.keys() else food.ingredients
     return table
 
 def for_sure(table):
     for_sure = copy.deepcopy(table)
-
-    def find_matching(fun):
-        return dict(filter(fun , possible.items()))
-
-    def find_singles():
-        return find_matching(lambda item: len(item[1]) == 1) 
-
-    def find_multiples():
-        return find_matching(lambda item: len(item[1]) > 1)
+    find_matching = lambda fun: dict(filter(fun , possible.items()))
+    find_singles = lambda: find_matching(lambda item: len(item[1]) == 1)
+    find_multiples = lambda: (lambda item: len(item[1]) > 1)
     
-    singles = find_singles()
-    multiples = find_multiples()
+    singles, multiples = find_singles(), find_multiples()
     
     while len(table) != len(singles):
         for allergen, ingredients in singles.items():
-            ingredient = list(ingredients)[0]
+            ingredient = next(iter(ingredients))
             for mult_allergen, mult_ingredients in multiples.items():
                 mult_ingredients.discard(ingredient)
-        singles = find_singles()
-        multiples = find_multiples()
+        singles, multiples = find_singles(), find_multiples()
 
     return for_sure
 
