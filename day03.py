@@ -5,10 +5,7 @@ width = len(grid[0])
 
 def next_x(cur, x_by):
     tmp = cur + x_by
-    if tmp < width:
-        return tmp
-    else:
-        return tmp - width
+    return tmp if tmp < width else tmp - width
 
 def traverse_grid(x_by, y_by):
     tot = 0
