@@ -1,16 +1,10 @@
-from aoc import blank_line_delimited
+from aoc import blank_line_delimited, print_assert
 import re
 
 def load_data():
-    tmp = blank_line_delimited('input/day04.txt')
     ret = []
-    for line in tmp:
-        blocks = line.split(' ')
-        m = {}
-        for block in blocks:
-            k,v = block.split(':')
-            m[k] = v
-        ret.append(m)
+    for line in blank_line_delimited('input/day04.txt'):
+        ret.append({ a[0]:a[1] for a in (block.split(':') for block in line.split(' ')) })
     return ret
 
 re_year = re.compile(r"^\d{4}$")
@@ -44,7 +38,7 @@ def valid_fields(p):
             hgt(p['hgt']) and re_hcl.match(p['hcl']) and
             re_ecl.match(p['ecl']) and re_pid.match(p['pid']))
 
-part_1_valid = list(filter(valid_keys, load_data()))
-print("Part 1: ", len(part_1_valid))
-part_2_valid = list(filter(valid_fields, part_1_valid))
-print("Part 2: ", len(part_2_valid))
+part_1_valid = [p for p in load_data() if valid_keys(p)]
+print_assert("Part 1:", len(part_1_valid), 235)
+part_2_valid = [p for p in part_1_valid if valid_fields(p)]
+print_assert("Part 2:", len(part_2_valid), 194)
