@@ -1,16 +1,9 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 
 class Ins:
-    def __init__(self, op, num):
-        self.op = op
-        self.num = num
-
-def load_instructions():
-    def parse_instruction(line):
-        op, num = line.split(' ')
-        return Ins(op, int(num))
-
-    return [parse_instruction(line) for line in non_blank_lines('input/day08.txt')]
+    def __init__(self, line):
+        a = line.split(' ')
+        self.op, self.num = a[0], int(a[1])
 
 def run_machine(instructions):
     ip = 0
@@ -25,20 +18,16 @@ def run_machine(instructions):
         else:
             seen.add(ip)
             
-        ins = instructions[ip]
-        if(ins.op == 'nop'):
-            ip += 1
-        elif(ins.op == 'acc'):
-            accum += ins.num
-            ip += 1
-        else:
-            ip += ins.num
+        match instructions[ip]:
+            case Ins(op='nop', num=n):
+                ip += 1
+            case Ins(op='acc', num=n):
+                accum += n
+                ip += 1
+            case Ins(op=_, num=n):
+                ip += n
 
-instructions = load_instructions()
-
-def part_1():
-    accum, early = run_machine(instructions)
-    return accum
+instructions = [Ins(line) for line in non_blank_lines('input/day08.txt')]
 
 def part_2():
     for ins in instructions:
@@ -56,5 +45,5 @@ def part_2():
         else:
             ins.op = original
             
-print("Part 1: ", part_1())
-print("Part 2: ", part_2())
+print_assert("Part 1:", run_machine(instructions)[0], 1782)
+print_assert("Part 2:", part_2(), 797)
