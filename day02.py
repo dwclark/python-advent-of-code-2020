@@ -1,18 +1,15 @@
-from aoc import non_blank_lines
-from collections import namedtuple
+from aoc import non_blank_lines, print_assert
 
-Pwd = namedtuple('Pwd', 'num1 num2 look_for pwd')
-
-def all_passwords():
-    def as_tuple(line):
-        r, c, s = line.split(' ')
-        low, high = r.split('-')
-        return Pwd(int(low), int(high), c.replace(':',''), s)
-
-    return [as_tuple(line) for line in non_blank_lines('input/day02.txt')]
+class Pwd:
+    def __init__(self, line):
+        r, c, self.pwd = line.split(' ')
+        self.look_for = c.replace(':', '')
+        self.num1, self.num2 = (int(v) for v in r.split('-'))
+        
+all_passwords = [Pwd(line) for line in non_blank_lines('input/day02.txt')]
 
 def count(is_valid):
-    return [is_valid(password) for password in all_passwords()].count(True)
+    return len([password for password in all_passwords if is_valid(password)])
 
-print("Part 1: ", count(lambda info: info.num1 <= info.pwd.count(info.look_for) <= info.num2))
-print("Part 2: ", count(lambda info: (info.pwd[info.num1-1] == info.look_for) ^ (info.pwd[info.num2-1] == info.look_for)))
+print_assert("Part 1:", count(lambda p: p.num1 <= p.pwd.count(p.look_for) <= p.num2), 469)
+print_assert("Part 2:", count(lambda p: (p.pwd[p.num1-1] == p.look_for) ^ (p.pwd[p.num2-1] == p.look_for)), 267)
