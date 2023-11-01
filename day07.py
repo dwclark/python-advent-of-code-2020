@@ -1,29 +1,15 @@
-from aoc import non_blank_lines
-from collections import namedtuple
+from aoc import non_blank_lines, print_assert
 import re
 
-Bag = namedtuple('Bag', 'color contents')
+re_contents = re.compile(r"(\d+) ([a-z]+ [a-z]+)")
+re_bag_color =  re.compile("^([a-z]+ [a-z]+)")
 
-def load_all():
-    re_contents = re.compile(r"^(\d+) ([a-z]+ [a-z]+)$")
-    
-    def parse_bag(line):
-        s = line.replace('bags', '').replace('bag', '').replace('.', '')
-        bag_color, contents = s.split(' contain ')
-        bag_color = bag_color.strip()
-        m = {}
+class Bag:
+    def __init__(self, line):
+        self.color = re.findall(re_bag_color, line)[0]
+        self.contents = { tup[1]:int(tup[0]) for tup in re.findall(re_contents, line) }
 
-        for content in [c.strip() for c in contents.split(',')]:
-            mat = re_contents.match(content)
-            if mat:
-                m[mat.group(2)] = int(mat.group(1))
-                
-        return Bag(bag_color, m)
-
-    bags = [parse_bag(line) for line in non_blank_lines('input/day07.txt')]
-    return { b.color: b for b in bags }
-
-colors_to_bags = load_all()
+colors_to_bags = { b.color: b for b in [Bag(line) for line in non_blank_lines('input/day07.txt')] }
 
 def contains_shiny_gold(color):
     for new_color in colors_to_bags[color].contents.keys():
@@ -32,17 +18,10 @@ def contains_shiny_gold(color):
     return False
 
 def num_sub_bags(bag):
-    tot = 0
-    for color, count in bag.contents.items():
-        tot += (count + (count * num_sub_bags(colors_to_bags[color])))
-    return tot
+    return sum((count + (count * num_sub_bags(colors_to_bags[color]))) for color, count in bag.contents.items())
 
 def part_1():
-    return len(list(filter(lambda color: color != 'shiny gold' and contains_shiny_gold(color),
-                           colors_to_bags.keys())))
+    return len([color for color in colors_to_bags.keys() if color != 'shiny gold' and contains_shiny_gold(color)])
 
-def part_2():
-    return num_sub_bags(colors_to_bags['shiny gold'])
-
-print("Part 1: ", part_1())
-print("Part 2: ", part_2())
+print_assert("Part 1:", part_1(), 246)
+print_assert("Part 2:", num_sub_bags(colors_to_bags['shiny gold']), 2976)
