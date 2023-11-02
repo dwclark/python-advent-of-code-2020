@@ -9,9 +9,7 @@ def load_all():
 all_ids = load_all()
 
 def part_2():
-    for idx in range(1, len(all_ids) - 1):
-        if all_ids[idx] + 1 != all_ids[idx+1]:
-            return (all_ids[idx] + 1)
+    return next((f + 1 for f,s in zip(all_ids[1:], all_ids[2:]) if not f+1 == s))
 
 print_assert("Part 1:", max(all_ids), 816)
 print_assert("Part 2:", part_2(), 539)
