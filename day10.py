@@ -1,18 +1,14 @@
-from aoc import single_int_line
+from aoc import single_int_line, print_assert
 import functools
 
 def load_all():
-    adapters = single_int_line('input/day10.txt')
-    adapters.append(0)
-    adapters.sort()
-    adapters.append(adapters[-1] + 3)
-    return tuple(adapters)
+    adapters = sorted(single_int_line('input/day10.txt'))
+    return tuple([0, *adapters, adapters[-1] + 3])
 
 def part_1(adapters):
-    diffs = {}
+    diffs = { 1: 0, 2: 0, 3: 0 }
     for index in range(0, len(adapters) - 1):
-        diff = adapters[index+1] - adapters[index]
-        diffs[diff] = diffs.get(diff, 0) + 1
+        diffs[adapters[index+1] - adapters[index]] += 1
     return diffs[1] * diffs[3]
 
 def part_2(my_list):
@@ -30,5 +26,5 @@ def part_2(my_list):
     return try_next(my_list[0], my_list[1:])
 
 adapters = load_all()
-print("Part 1:", part_1(adapters))
-print("Part 2:", part_2(adapters))
+print_assert("Part 1:", part_1(adapters), 2760)
+print_assert("Part 2:", part_2(adapters), 13816758796288)

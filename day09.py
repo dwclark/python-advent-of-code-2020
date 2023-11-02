@@ -1,4 +1,4 @@
-from aoc import single_int_line
+from aoc import single_int_line, print_assert
 from itertools import combinations
 
 def search_violation(window_size, the_list):
@@ -27,5 +27,5 @@ def search_for_sum(look_for, the_list):
         
 my_list = single_int_line('input/day09.txt')
 
-print("Part 1:", search_violation(25, my_list))
-print("Part 2:", search_for_sum(177777905, my_list))
+print_assert("Part 1:", search_violation(25, my_list), 177777905)
+print_assert("Part 2:", search_for_sum(177777905, my_list), 23463012)
