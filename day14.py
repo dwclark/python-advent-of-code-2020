@@ -11,12 +11,12 @@ class Machine:
         self.mask = ''
 
     def where_mask_is(self, v):
-        return list(map(lambda tup: tup[0], filter(lambda tup: tup[1] == v, enumerate(self.mask))))
+        return [tup[0] for tup in enumerate(self.mask) if tup[1] == v]
     
     def decode(self, instruction):
-        match = Machine.mem_pattern.match(instruction)
-        if match:
-            self.write_memory(int(match.group(1)), int(match.group(2)))
+        m = Machine.mem_pattern.match(instruction)
+        if m:
+            self.write_memory(int(m.group(1)), int(m.group(2)))
         else:
             self.mask = ''.join(reversed(Machine.mask_pattern.match(instruction).group(1)))
 
@@ -55,5 +55,5 @@ class Machine2(Machine):
             self.memory[address] = val
         
 instructions = non_blank_lines('input/day14.txt')
-print("Part 1:", sum(Machine().run(instructions).memory.values()))
-print("Part 2:", sum(Machine2().run(instructions).memory.values()))
+print_assert("Part 1:", sum(Machine().run(instructions).memory.values()), 14722016054794)
+print_assert("Part 2:", sum(Machine2().run(instructions).memory.values()), 3618217244644)
