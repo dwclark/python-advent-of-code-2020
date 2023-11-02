@@ -7,9 +7,5 @@ def load_all():
     return sorted([seat_id(line) for line in non_blank_lines("input/day05.txt")])
 
 all_ids = load_all()
-
-def part_2():
-    return next((f + 1 for f,s in zip(all_ids[1:], all_ids[2:]) if not f+1 == s))
-
-print_assert("Part 1:", max(all_ids), 816)
-print_assert("Part 2:", part_2(), 539)
+print_assert("Part 1:", all_ids[-1], 816)
+print_assert("Part 2:", next((f + 1 for f,s in zip(all_ids[1:], all_ids[2:]) if not f+1 == s)), 539)
