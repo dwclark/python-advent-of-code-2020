@@ -1,4 +1,4 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 from collections import deque
 
 expressions = non_blank_lines('input/day18.txt')
@@ -46,5 +46,5 @@ def execute_postfix(queue):
 def execute(precedence):
     return sum([ execute_postfix(to_postfix(tokenize(expr), precedence)) for expr in expressions ])
 
-print("Part 1:", execute({ '+': 1, '*': 1 }))
-print("Part 2:", execute({ '+': 2, '*': 1 }))
+print_assert("Part 1:", execute({ '+': 1, '*': 1 }), 11297104473091)
+print_assert("Part 2:", execute({ '+': 2, '*': 1 }), 185348874183674)
