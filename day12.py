@@ -1,18 +1,15 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 from collections import deque
 
 class Ship:
     directionsMap = { 'E': 0, 'S': 1, 'W': 2, 'N': 3 }
 
     def toDirections(dirMap):
-        ret = [0,0,0,0]
-        for k,v in dirMap.items():
-            ret[Ship.directionsMap[k]] = v
-        return ret
+        return [dirMap.get('E', 0), dirMap.get('S', 0),
+            dirMap.get('W', 0), dirMap.get('N', 0)] 
     
     def __init__(self, initialMap):
-        self.x = 0
-        self.y = 0
+        self.x, self.y = 0, 0
         self.directions = deque(Ship.toDirections(initialMap))
 
     def manhattan(self):
@@ -49,5 +46,5 @@ class Ship2(Ship):
         self.directions[Ship.directionsMap[move[0]]] += move[1]
 
 my_actions = [ (line[0], int(line[1:])) for line in non_blank_lines('input/day12.txt') ]
-print("Part 1:", Ship({'E': 1}).actions(my_actions).manhattan())
-print("Part 2:", Ship2({'E': 10, 'N': 1}).actions(my_actions).manhattan())
+print_assert("Part 1:", Ship({'E': 1}).actions(my_actions).manhattan(), 445)
+print_assert("Part 2:", Ship2({'E': 10, 'N': 1}).actions(my_actions).manhattan(), 42495)
