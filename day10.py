@@ -1,14 +1,13 @@
 from aoc import single_int_line, print_assert
 import functools
+from collections import Counter
 
 def load_all():
     adapters = sorted(single_int_line('input/day10.txt'))
     return tuple([0, *adapters, adapters[-1] + 3])
 
-def part_1(adapters):
-    diffs = { 1: 0, 2: 0, 3: 0 }
-    for index in range(0, len(adapters) - 1):
-        diffs[adapters[index+1] - adapters[index]] += 1
+def part_1(a):
+    diffs = Counter((s-f for f,s in zip(a, a[1:])))
     return diffs[1] * diffs[3]
 
 def part_2(my_list):
