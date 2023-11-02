@@ -1,4 +1,4 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 
 class Vec(tuple):
 
@@ -22,15 +22,9 @@ Vec.neighbor_indices[3] = Vec.init_neighbors((0,0,0), [])
 Vec.neighbor_indices[4] = Vec.init_neighbors((0,0,0,0), [])
 
 def initialize_game(dims):
-    cubes = {}
-    for x, line in enumerate(non_blank_lines('input/day17.txt')):
-        for y, s in enumerate(line):
-            tmp = [ x, y ]
-            for v in range(len(tmp), dims):
-                tmp.append(0)
-                if s == '#':
-                    cubes[Vec(tmp)] = 1
-    return cubes
+    return {Vec([ x, y ] + ([0] * (dims - 2))):1
+            for x, line in enumerate(non_blank_lines('input/day17.txt'))
+            for y, s in enumerate(line) if s == '#'}
 
 def game_limits(dims, cubes):
     mins, maxes = {}, {}
@@ -70,5 +64,5 @@ def play_game(dims, rounds):
         cubes = check_all_cubes(dims, limits, cubes, {})
     return len(cubes)
 
-print("Part 1:", play_game(3, 6))
-print("Part 2:", play_game(4, 6))
+print_assert("Part 1:", play_game(3, 6), 213)
+print_assert("Part 2:", play_game(4, 6), 1624)
