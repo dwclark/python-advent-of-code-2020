@@ -1,4 +1,4 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 
 data = non_blank_lines('input/day13.txt')
 earliest = int(data[0])
@@ -32,5 +32,5 @@ def part_2():
 
     return result
 
-print("Part 1:", part_1())
-print("Part 2:", part_2())
+print_assert("Part 1:", part_1(), 205)
+print_assert("Part 2:", part_2(), 803025030761664)
