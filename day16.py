@@ -1,6 +1,7 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 import re
 import functools
+from math import prod
 
 class Rule: #for caching to work correctly
     def __init__(self, name, r1, r2):
@@ -21,7 +22,7 @@ class Rule: #for caching to work correctly
         return (val in self.r1) or (val in self.r2)
     
 def parse_ticket(line):
-    return list(map(int, line.split(',')))
+    return [int(s) for s in line.split(',')]
 
 pattern = re.compile(r"^([a-z ]+): (\d+)-(\d+) or (\d+)-(\d+)$")
 
@@ -100,21 +101,11 @@ def satisfy(satisfied, unsatisfied):
     return []
     
 def part_1():
-    hold = []
-    for ticket in nearby_tickets:
-        for val in ticket:
-            if not is_valid(val):
-                hold.append(val)
-    return sum(hold)
+    return sum((val for ticket in nearby_tickets for val in ticket if not is_valid(val)))
 
 def part_2():
     satisfied = satisfy([], rules)
-    accum = 1
-    for rule, val in zip(satisfied, my_ticket):
-        if(rule.name.startswith('departure')):
-            accum *= val
+    return prod((val for rule, val in zip(satisfied, my_ticket) if rule.name.startswith('departure')))
 
-    return accum
-
-print("Part 1:", part_1())
-print("Part 2:", part_2())
+print_assert("Part 1:", part_1(), 23036)
+print_assert("Part 2:", part_2(), 1909224687553)
