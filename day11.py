@@ -1,4 +1,4 @@
-from aoc import non_blank_lines
+from aoc import non_blank_lines, print_assert
 from copy import deepcopy
 
 class Ferry:
@@ -100,7 +100,7 @@ def solve(con):
         prev = current
         current = prev.next_grid()
 
-    return len(list(filter(current.is_occupied, current.every_seat())))
+    return len([s for s in current.every_seat() if current.is_occupied(s)])
 
-print("Part 1:", solve(Ferry))
-print("Part 2:", solve(Ferry2))
+print_assert("Part 1:", solve(Ferry), 2093)
+print_assert("Part 2:", solve(Ferry2), 1862)

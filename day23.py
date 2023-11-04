@@ -48,7 +48,6 @@ class Game:
         self.nodes = n
         self.current = self.nodes[init[0]]
         self.init_size = len(init)
-        self.init = init
 
     def __str__(self):
         node = self.nodes[1]
